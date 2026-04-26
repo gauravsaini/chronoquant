@@ -98,31 +98,34 @@ def compute_delta_statistics(
     return results
 
 
-def compare_with_isoquant_overhead(
+def compare_with_learned_codebook_overhead(
     seq_len: int, head_dim: int = 256, n_layers: int = 32,
     n_kv_heads: int = 8, svd_rank: int = 32, stride: int = 64,
     delta_bits: int = 4,
 ) -> Dict:
-    """Compare ChronoQuant vs IsoQuant memory at a given context length."""
+    """Compare ChronoQuant vs a hypothetical learned codebook/SVD method at a given context length."""
     n_total = n_layers * n_kv_heads
-    iso_meta_ph = (head_dim*svd_rank*2 + svd_rank*svd_rank*2 +
-                   svd_rank*16*2 + head_dim*4 + head_dim*2)
-    iso_meta = 2 * n_total * iso_meta_ph
-    iso_kv = 2 * n_total * seq_len * (svd_rank * 0.5 + 2)
-    iso_total = iso_meta + iso_kv
+    # Typical metadata for an SVD-based approach
+    meta_ph = (head_dim*svd_rank*2 + svd_rank*svd_rank*2 +
+               svd_rank*16*2 + head_dim*4 + head_dim*2)
+    learned_meta = 2 * n_total * meta_ph
+    learned_kv = 2 * n_total * seq_len * (svd_rank * 0.5 + 2)
+    learned_total = learned_meta + learned_kv
+    
     nkf = math.ceil(seq_len / stride)
     npf = seq_len - nkf
     ckf = 2 * n_total * nkf * head_dim * 2
     cpf = 2 * n_total * npf * (head_dim * (delta_bits/8) + 4)
     c_total = ckf + cpf
+    
     baseline = 2 * n_total * seq_len * head_dim * 2
     return {
         "baseline_fp16": {"total_mb": baseline/1e6},
-        "isoquant": {
-            "metadata_mb": iso_meta/1e6, "compressed_kv_mb": iso_kv/1e6,
-            "total_mb": iso_total/1e6,
-            "compression_ratio": baseline/iso_total,
-            "metadata_fraction": iso_meta/iso_total,
+        "learned_codebook": {
+            "metadata_mb": learned_meta/1e6, "compressed_kv_mb": learned_kv/1e6,
+            "total_mb": learned_total/1e6,
+            "compression_ratio": baseline/learned_total,
+            "metadata_fraction": learned_meta/learned_total,
         },
         "chronoquant": {
             "metadata_mb": 0.0, "keyframe_mb": ckf/1e6, "pframe_mb": cpf/1e6,
