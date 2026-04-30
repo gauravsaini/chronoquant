@@ -1,5 +1,5 @@
 # ChronoQuant PyTorch Trace Pipeline
-
+Paper - https://zenodo.org/records/19922150
 This directory contains the PyTorch implementation of the **ChronoQuant** compression framework.
 
 ## Overview
