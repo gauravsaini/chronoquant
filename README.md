@@ -1,6 +1,9 @@
 # ChronoQuant PyTorch Trace Pipeline
+ChronoQuant differs from prior Delta-KV style approaches by storing anchor-relative INT4 residuals in a packed zero-metadata layout and decoding them directly inside the attention kernel, avoiding graph-level reconstruction and the amortization cliff.
+
 Paper - https://zenodo.org/records/19922150
 This directory contains the PyTorch implementation of the **ChronoQuant** compression framework.
+
 
 ## Overview
 While `chronoquant_mlx` handles end-to-end inference and native hardware acceleration on Apple Silicon, this directory is dedicated to **trace-level evaluation and conceptual validation**. It acts as the algorithmic testbed.
