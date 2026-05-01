@@ -1,10 +1,10 @@
 # ChronoQuant PyTorch Trace Pipeline
-ChronoQuant differs from prior Delta-KV style approaches by storing anchor-relative INT4 residuals in a packed zero-metadata layout and decoding them directly inside the attention kernel, avoiding graph-level reconstruction and the amortization cliff.
+ChronoQuant differs from prior Delta-KV style approaches by storing anchor-relative INT4 residuals in a packed zero-metadata layout and decoding them directly inside the attention kernel, avoiding graph-level reconstruction and the amortization cliff. <br/>
 
 Links : 
-Paper - https://zenodo.org/records/19922150
-LLama.cpp - https://github.com/gauravsaini/llama-cpp-chronoquant
-Mlx - https://github.com/gauravsaini/chronoquant_mlx
+Paper - https://zenodo.org/records/19922150 <br/>
+LLama.cpp - https://github.com/gauravsaini/llama-cpp-chronoquant <br/>
+Mlx - https://github.com/gauravsaini/chronoquant_mlx <br/>
 
 This directory contains the PyTorch implementation of the **ChronoQuant** compression framework.
 
